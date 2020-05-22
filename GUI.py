@@ -1,247 +1,165 @@
 import pygame
-import sys
-import os
 
-# SDL is the library which Pygame uses
-# We use SDL to put the game window at the screen's centre
-os.environ['SDL_VIDEO_CENTERED'] = '1'
-SCREEN_SIZE = (800, 640)
-BLACK = (0, 0, 0)
-WHITE = (255, 255, 255)
-GREEN = (50, 255, 50)
-BLUE = (50, 50, 255)
-RED = (255, 50, 50)
-REPLAY_MESSAGE = 'Press space to play again'
-
+#initialize pygame
 pygame.init()
-board_font = pygame.font.SysFont('arial', 80)
-game_over_font = pygame.font.SysFont('monospace', 80, bold=True)
-replay_font = pygame.font.SysFont('monospace', 50)
-screen = pygame.display.set_mode(SCREEN_SIZE)
-pygame.display.set_caption('Tic Tac Toe')
-clock = pygame.time.Clock()
 
-def draw_lines(screen, screen_size):
-    # Draw vertical lines
-    # Lines go from top of screen to bottom of screen
-    vertical_line_1 = int(screen_size[0] / 3) # lines mark 1/3 of the board
-    pygame.draw.line(screen, BLACK, (vertical_line_1, 0), (vertical_line_1, screen_size[0]), 4)
-    vertical_line_2 = vertical_line_1 * 2
-    pygame.draw.line(screen, BLACK, (vertical_line_2, 0), (vertical_line_2, screen_size[0]), 4)
-    # Draw horizontal lines
-    horizontal_line_1 = int(screen_size[1] / 3)
-    pygame.draw.line(screen, BLACK, (0, horizontal_line_1), (screen_size[0], horizontal_line_1), 4)
-    horizontal_line_2 = horizontal_line_1 * 2
-    pygame.draw.line(screen, BLACK, (0, horizontal_line_2), (screen_size[0], horizontal_line_2), 4)
+#create screen
+x=400
+y=400
+screen = pygame.display.set_mode((x,y))
 
+running = True
 
-def draw_letter(screen, letter, colour, position_rect):
-    player_choice = board_font.render(letter, False, colour)
-    # Fonts are draw to the top left of a Pygame rectangle
-    # This game would look better if they're drawn to the centre
-    # So after we generate a font image, create a special rectangle
-    # that's the center of the cell's rectangle. So the image will
-    # appear in the centre
-    choice_rect = player_choice.get_rect(center=position_rect.center)
-    # Blit is Pygame's way of drawing an image to a rectangle
-    screen.blit(player_choice, choice_rect)
+#title and logo
+'''
+as we arr changing the attr of the dispay so we need to access the display meethod
+of pygame then it has functions for generally all the display attr
+'''
+pygame.display.set_caption('TIC TAC TOE')       #this sets the heading title of the screen
+
+#icon
+'''
+to set an icon we again have to set the set_icon method to a png file
+which has to be loaded by using pygame's image method
+
+in which image is to be loaded as
+pygame.image.load("path or file name if in same dir")
+'''
+
+icon = pygame.image.load('tic-tac-toe.png')
+pygame.display.set_icon(icon)
 
 
-def initialise_board(screen_size):
-    board = []
-    counter = 1
-    # First add 3 lists
-    for i in range(3):
-        board.append([])
+'''
+as if we run the above code it gets terminated after sometime and also no buttons work
+like the X button minimize button and stuff
 
-    # Then we calculate the width and height of each cell
-    # We want each cell to have an even amount of space
-    rect_width = int(screen_size[0] / 3)
-    rect_height = int(screen_size[1] / 3)
-    # Now we have a list of lists, each list item will have a place to play
-    # Outer list with contains each row
-    top = 0
-    for i in range(3):
-        left = 0
-        # Inner list which has 3 cells per row
-        for j in range(3):
-            board[i].append({
-                'played': False,
-                'player': str(counter), # Could be X or O, shows numbers by default
-                'rect': pygame.Rect(left, top, rect_width, rect_height)
-            })
-            # Add more to the left values so cells don't overlap
-            left += rect_width
-            # Increment counter so that it goes up to 9
-            counter += 1
-        # Ensure that the top values are increased for every row
-        top += rect_height
-    return board
+these all buttons are handled by pygame.event.get() it is a list
+so we can itterate over it and just check for inputs and pygame has inbuilt EVENT TYPES for detection
+of each events
+like QUIT for the x or quit button
 
+THE GENERAL SYNTAX
 
-def winner(board, player):
-    # Check win by row
-    for row in board:
-        if (row[0]['player'] == player and row[1]['player'] == player and
-                row[2]['player'] == player):
-            return True
+for event in pygame.event.get():
+    if event.type == <event type>:
+        <action>
 
-    # Check win by column
-    for i in range(3):
-        if (board[0][i]['player'] == player and board[1][i]['player'] == player and
-                board[2][i]['player'] == player):
-            return True
+also NOTE:-
+    all the systems that are gonna have to updated or displayed continously
+    are to be defined or called within this while loop
+    like
 
-    # Check diagonals
-    if (board[0][0]['player'] == player and board[1][1]['player'] == player and
-        board[2][2]['player'] == player):
-        return True
+    background colour
 
-    if (board[0][2]['player'] == player and board[1][1]['player'] == player and
-        board[2][0]['player'] == player):
-        return True
+    which is needed to be set using pygames screen method
 
-    return False
+    syntax:-
+    screen.fill((r,g,b))
+
+    NOW HEADS UP
+
+    THAT WHILE THESE PROCESSES ARE RUNNING THE METHODS
+    WHICH AFFECT DISPLAY HAVE TO BE UPDATED EXPLICITLY
+    ELSE WHICH IT WONT SHOW UP IIN THE DISPLAY WINDOW
+
+    TO DO THAT WE NEED TO CALL THE UPDATE METHOD IN DISPLAY
+    INSIDE THE GAME LOOP
 
 
-def is_stalemate(board):
-    return all([all([r['played'] for r in row]) for row in board])
+'''
+#grid
+
+def grid():
+    #vertical line 1
+    verticalStart_X_1,verticalStart_Y_1=(int(x/3),0)
+    verticalEnd_X_1,verticalEnd_Y_1=(int(x/3),y)
+
+    #vertical line 2
+    verticalStart_X_2,verticalStart_Y_2=(int(2*(x/3)),0)
+    verticalEnd_X_2,verticalEnd_Y_2= (int(2*(x/3)),y)
+
+    #horizontal line 1
+    horizontalStart_X_1,horizontalStart_Y_1=(0,int(y/3))
+    horizontalEnd_X_1,horizontalEnd_Y_1=(x,int(y/3))
+
+    #horizontal line 2
+    horizontalStart_X_2,horizontalStart_Y_2=(0,int(2*(y/3)))
+    horizontalEnd_X_2,horizontalEnd_Y_2=(x,int(2*(y/3)))
+
+    pygame.draw.line(screen,(100,50,255),(verticalStart_X_1,verticalStart_Y_1),(verticalEnd_X_1,verticalEnd_Y_1),5)
+    pygame.draw.line(screen,(100,50,255),(verticalStart_X_2,verticalStart_Y_2),(verticalEnd_X_2,verticalEnd_Y_2),5)
+
+    pygame.draw.line(screen,(100,50,255),(horizontalStart_X_1,horizontalStart_Y_1),(horizontalEnd_X_1,horizontalEnd_Y_1),5)
+    pygame.draw.line(screen,(100,50,255),(horizontalStart_X_2,horizontalStart_Y_2),(horizontalEnd_X_2,horizontalEnd_Y_2),5)
 
 
-def update(game, keys_pressed):
-    someone_played = False
-    if ((keys_pressed[pygame.K_1] or keys_pressed[pygame.K_KP1])
-            and not game['board'][0][0]['played']):
-        game['board'][0][0]['played'] = True
-        game['board'][0][0]['player'] = game['player']
-        someone_played = True
-
-    elif ((keys_pressed[pygame.K_2] or keys_pressed[pygame.K_KP2])
-            and not game['board'][0][1]['played']):
-        game['board'][0][1]['played'] = True
-        game['board'][0][1]['player'] = game['player']
-        someone_played = True
-
-    elif ((keys_pressed[pygame.K_3] or keys_pressed[pygame.K_KP3])
-            and not game['board'][0][2]['played']):
-        game['board'][0][2]['played'] = True
-        game['board'][0][2]['player'] = game['player']
-        someone_played = True
-
-    elif ((keys_pressed[pygame.K_4] or keys_pressed[pygame.K_KP4])
-            and not game['board'][1][0]['played']):
-        game['board'][1][0]['played'] = True
-        game['board'][1][0]['player'] = game['player']
-        someone_played = True
-
-    elif ((keys_pressed[pygame.K_5] or keys_pressed[pygame.K_KP5])
-            and not game['board'][1][1]['played']):
-        game['board'][1][1]['played'] = True
-        game['board'][1][1]['player'] = game['player']
-        someone_played = True
-
-    elif ((keys_pressed[pygame.K_6] or keys_pressed[pygame.K_KP6])
-            and not game['board'][1][2]['played']):
-        game['board'][1][2]['played'] = True
-        game['board'][1][2]['player'] = game['player']
-        someone_played = True
-
-    elif ((keys_pressed[pygame.K_7] or keys_pressed[pygame.K_KP7])
-            and not game['board'][2][0]['played']):
-        game['board'][2][0]['played'] = True
-        game['board'][2][0]['player'] = game['player']
-        someone_played = True
-
-    elif ((keys_pressed[pygame.K_8] or keys_pressed[pygame.K_KP8])
-            and not game['board'][2][1]['played']):
-        game['board'][2][1]['played'] = True
-        game['board'][2][1]['player'] = game['player']
-        someone_played = True
-
-    elif ((keys_pressed[pygame.K_9] or keys_pressed[pygame.K_KP9])
-            and not game['board'][2][2]['played']):
-        game['board'][2][2]['played'] = True
-        game['board'][2][2]['player'] = game['player']
-        someone_played = True
-
-    return someone_played
+circle1X,circle3X,circle5X = x/6, 3*(x/6), 5*(x/6)
+circle1Y,circle3Y,circle5Y = y/6, 3*(y/6), 5*(y/6)
 
 
-def end_game_message(screen, screen_size, main_message, main_font,
-        replay_message, replay_font, colour):
-    main_text = main_font.render(main_message, False, colour)
-    main_rect = main_text.get_rect(center=(screen_size[0]/2, screen_size[1]/2))
-    screen.blit(main_text, main_rect)
-    replay_text = replay_font.render(replay_message, False, colour)
-    replay_rect = replay_text.get_rect(center=(screen_size[0]/2,
-        main_rect.bottom + 30))
-    screen.blit(replay_text, replay_rect)
+circleCoordinates={
+    #row 1
+    1 : (circle1X,circle1Y),
+    2 : (circle3X,circle1Y),
+    3 : (circle5X,circle1Y),
+    #row 2
+    4 : (circle1X,circle3Y),
+    5 : (circle3X,circle3Y),
+    6 : (circle5X,circle3Y),
+    #row 3
+    7 : (circle1X,circle5Y),
+    8 : (circle3X,circle5Y),
+    9 : (circle5X,circle5Y)
+}
+
+def drawCircle(mouseX,mouseY):
+    pygame.draw.circle(screen,(100,25,255),(int(mouseX),int(mouseY)),30,5)
+
+row1X1, row1X2, row2X1, row2X2, row3X1, row3X2 = (x/12), 3 * (x/12), 5 * (x/12), 7 * (x/12), 9 * (x/12), 11 * (x/12)
+column1Y1, column1Y2, column2Y1, column2Y2, column3Y1, column3Y2 = (y/12), 3 * (y/12), 5 * (y/12), 7 * (y/12), 9 * (y/12), 11 *  (y/12)
 
 
-def render(screen, screen_size, game, clock):
-    screen.fill(WHITE)
-    draw_lines(screen, screen_size)
+crossCoorrdinates={
+    1:(row1X1, row1X2, column1Y1, column1Y2),
+    2:(row2X1, row2X2, column1Y1, column1Y2),
+    3:(row3X1, row3X2, column1Y1, column1Y2),
+    #row 1
+    4:(row1X1, row1X2, column2Y1, column2Y2),
+    5:(row2X1, row2X2, column2Y1, column2Y2),
+    6:(row3X1, row3X2, column2Y1, column2Y2),
+    #row 2
+    7:(row1X1, row1X2, column3Y1, column3Y2),
+    8:(row2X1, row2X2, column3Y1, column3Y2),
+    9:(row3X1, row3X2, column3Y1, column3Y2)
 
-    # Draw the letters if they're played
-    for row in game['board']:
-        for cell in row:
-            if cell['player'] == 'X':
-                draw_letter(screen, 'X', BLUE, cell['rect'])
-            elif cell['player'] == 'O':
-                draw_letter(screen, 'O', GREEN, cell['rect'])
-            else:
-                draw_letter(screen, cell['player'], BLACK, cell['rect'])
+}
+def drawCross(x1,x2,y1,y2):
+    pygame.draw.line(screen,(100,25,255),(x1,y1),(x2,y2),5)
+    pygame.draw.line(screen,(100,25,255),(x2,y1),(x1,y2),5)
 
-    if game['win']:
-        win_message = 'Player ' + game['player'] + ' won!'
-        end_game_message(screen, SCREEN_SIZE, win_message, game_over_font,
-                REPLAY_MESSAGE, replay_font, RED)
-    elif not game['win'] and game['stalemate']:
-        stale_message = 'Stalemate!'
-        end_game_message(screen, SCREEN_SIZE, stale_message, game_over_font,
-                REPLAY_MESSAGE, replay_font, RED)
+while running:             #this function to hold the screen or GENERAL GAME LOOP until quit pressed
+    screen.fill((255,50,100))
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+        if pygame.mouse.get_pressed()==(1,0,0):
+            print('Hey Mouse \n')
+            mouseX,mouseY=pygame.mouse.get_pos()
+            print(mouseX,mouseY)
+            circleCoordinates.append((mouseX,mouseY))
 
+
+
+    #DRAW cicle
+    for i in (circleCoordinates):
+        mouseX,mouseY=circleCoordinates[i]
+        drawCircle(mouseX,mouseY)
+
+    #DRAW cross
+    for j in (crossCoorrdinates):
+        x1,x2,y1,y2=crossCoorrdinates[j]
+        drawCross((x1),int(x2),int(y1),int(y2))
+
+    grid()
     pygame.display.update()
-    clock.tick(60)
-
-
-def main():
-    def initialise():
-        return {
-                'board': initialise_board(SCREEN_SIZE),
-                'player':  'X',
-                'win': False,
-                'stalemate': False,
-                'change_player': False
-                }
-
-    game = initialise()
-
-    while True:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
-
-        keys_pressed = pygame.key.get_pressed()
-        if not (game['win'] or game['stalemate']):
-            game['change_player'] = update(game, keys_pressed)
-        else:
-            # Reset the game by pressing space bar
-            if keys_pressed[pygame.K_SPACE]:
-                game = initialise()
-
-        game['win'] = winner(game['board'], game['player'])
-        game['stalemate'] = is_stalemate(game['board'])
-
-        render(screen, SCREEN_SIZE, game, clock)
-
-        # Well if the last move didn't win/end the game, switch to the other player
-        if game['change_player'] and not (game['win'] or game['stalemate']):
-            if game['player'] == 'X':
-                game['player'] = 'O'
-            else:
-                game['player'] = 'X'
-
-if __name__ == '__main__':
-    main()
