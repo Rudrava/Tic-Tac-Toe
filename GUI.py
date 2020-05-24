@@ -94,72 +94,165 @@ def grid():
     pygame.draw.line(screen,(100,50,255),(horizontalStart_X_2,horizontalStart_Y_2),(horizontalEnd_X_2,horizontalEnd_Y_2),5)
 
 
+#data
 circle1X,circle3X,circle5X = x/6, 3*(x/6), 5*(x/6)
 circle1Y,circle3Y,circle5Y = y/6, 3*(y/6), 5*(y/6)
-
-
+#per circle
 circleCoordinates={
-    #row 1
-    1 : (circle1X,circle1Y),
-    2 : (circle3X,circle1Y),
-    3 : (circle5X,circle1Y),
-    #row 2
-    4 : (circle1X,circle3Y),
-    5 : (circle3X,circle3Y),
-    6 : (circle5X,circle3Y),
-    #row 3
-    7 : (circle1X,circle5Y),
-    8 : (circle3X,circle5Y),
-    9 : (circle5X,circle5Y)
+    #1
+    1 : [(circle1X,circle1Y),False],
+    2 : [(circle3X,circle1Y),False],
+    3 : [(circle5X,circle1Y),False],
+    4 : [(circle1X,circle3Y),False],
+    5 : [(circle3X,circle3Y),False],
+    6 : [(circle5X,circle3Y),False],
+    7 : [(circle1X,circle5Y),False],
+    8 : [(circle3X,circle5Y),False],
+    9 : [(circle5X,circle5Y),False]
 }
-
+#draw in board
 def drawCircle(mouseX,mouseY):
     pygame.draw.circle(screen,(100,25,255),(int(mouseX),int(mouseY)),30,5)
 
+
+
+#data
 row1X1, row1X2, row2X1, row2X2, row3X1, row3X2 = (x/12), 3 * (x/12), 5 * (x/12), 7 * (x/12), 9 * (x/12), 11 * (x/12)
 column1Y1, column1Y2, column2Y1, column2Y2, column3Y1, column3Y2 = (y/12), 3 * (y/12), 5 * (y/12), 7 * (y/12), 9 * (y/12), 11 *  (y/12)
-
-
+#per cross
 crossCoorrdinates={
-    1:(row1X1, row1X2, column1Y1, column1Y2),
-    2:(row2X1, row2X2, column1Y1, column1Y2),
-    3:(row3X1, row3X2, column1Y1, column1Y2),
-    #row 1
-    4:(row1X1, row1X2, column2Y1, column2Y2),
-    5:(row2X1, row2X2, column2Y1, column2Y2),
-    6:(row3X1, row3X2, column2Y1, column2Y2),
-    #row 2
-    7:(row1X1, row1X2, column3Y1, column3Y2),
-    8:(row2X1, row2X2, column3Y1, column3Y2),
-    9:(row3X1, row3X2, column3Y1, column3Y2)
+    1:[(row1X1, row1X2, column1Y1, column1Y2),False],
+    2:[(row2X1, row2X2, column1Y1, column1Y2),False],
+    3:[(row3X1, row3X2, column1Y1, column1Y2),False],
+    4:[(row1X1, row1X2, column2Y1, column2Y2),False],
+    5:[(row2X1, row2X2, column2Y1, column2Y2),False],
+    6:[(row3X1, row3X2, column2Y1, column2Y2),False],
+    7:[(row1X1, row1X2, column3Y1, column3Y2),False],
+    8:[(row2X1, row2X2, column3Y1, column3Y2),False],
+    9:[(row3X1, row3X2, column3Y1, column3Y2),False]
 
 }
+#draw on board
 def drawCross(x1,x2,y1,y2):
     pygame.draw.line(screen,(100,25,255),(x1,y1),(x2,y2),5)
     pygame.draw.line(screen,(100,25,255),(x2,y1),(x1,y2),5)
 
+keys=[]
+def markAt(turn):
+         # 1
+        if keys[pygame.K_KP1] or keys [pygame.K_1] :
+            cube = 1
+            if turn % 2:
+                print('cross')
+                crossCoorrdinates[cube][1]=True
+                return
+            print('circle')
+            circleCoordinates[cube][1]=True
+
+        # 2
+        if keys [pygame.K_KP2] or keys [pygame.K_2]:
+            cube = 2
+            if turn % 2:
+                crossCoorrdinates[cube][1]=True
+            else:
+                circleCoordinates[cube][1]=True
+
+        # 3
+        if keys [pygame.K_KP3] or keys [pygame.K_3]:
+            cube = 3
+            if turn % 2:
+                crossCoorrdinates[cube][1]=True
+            else:
+                circleCoordinates[cube][1]=True
+
+        #4
+        if keys [pygame.K_KP4] or keys [pygame.K_4]:
+            cube = 4
+            if turn % 2:
+                crossCoorrdinates[cube][1]=True
+            else:
+                circleCoordinates[cube][1]=True
+
+        # 5
+        if keys [pygame.K_KP5] or keys [pygame.K_5]:
+            cube = 5
+            if turn % 2:
+                crossCoorrdinates[cube][1]=True
+            else:
+                circleCoordinates[cube][1]=True
+
+        # 6
+        if keys [pygame.K_KP6] or keys [pygame.K_6]:
+            cube = 6
+            if turn % 2:
+                crossCoorrdinates[cube][1]=True
+            else:
+                circleCoordinates[cube][1]=True
+
+        # 7
+        if keys [pygame.K_KP7] or keys [pygame.K_7]:
+            cube = 7
+            if turn % 2:
+                crossCoorrdinates[cube][1]=True
+            else:
+                circleCoordinates[cube][1]=True
+
+        # 8
+        if keys [pygame.K_KP8] or keys [pygame.K_8]:
+            cube = 8
+            if turn % 2:
+                crossCoorrdinates[cube][1]=True
+            else:
+                circleCoordinates[cube][1]=True
+
+        # 9
+        if keys [pygame.K_KP9] or keys [pygame.K_9]:
+            cube = 9
+            if turn % 2:
+                crossCoorrdinates[cube][1]=True
+            else:
+                circleCoordinates[cube][1]=True
+
+turns = 1
 while running:             #this function to hold the screen or GENERAL GAME LOOP until quit pressed
+    pygame.time.delay(100)
     screen.fill((255,50,100))
+
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-        if pygame.mouse.get_pressed()==(1,0,0):
-            print('Hey Mouse \n')
-            mouseX,mouseY=pygame.mouse.get_pos()
-            print(mouseX,mouseY)
-            circleCoordinates.append((mouseX,mouseY))
-
-
+        if turns <= 9:
+            if event.type == pygame.KEYDOWN:
+                keys = pygame.key.get_pressed()
+                print('hi')
+                markAt(turns)
+                turns += 1
+                print(turns)
+        else:
+            print('Turns Ended')
+            exit()
 
     #DRAW cicle
-    for i in (circleCoordinates):
-        mouseX,mouseY=circleCoordinates[i]
-        drawCircle(mouseX,mouseY)
+    for i in (circleCoordinates):           #itterates over all circle coordinates
+        if circleCoordinates[i][1]:                     #checks if circle draw to be drawn or not
+            (mouseX,mouseY)=circleCoordinates[i][0]         #gets the coord
+            drawCircle(mouseX,mouseY)
 
     #DRAW cross
     for j in (crossCoorrdinates):
-        x1,x2,y1,y2=crossCoorrdinates[j]
-        drawCross((x1),int(x2),int(y1),int(y2))
+        if crossCoorrdinates[j][1]:
+            x1,x2,y1,y2=crossCoorrdinates[j][0]
+            drawCross(int(x1),int(x2),int(y1),int(y2))
+
 
     grid()
+
     pygame.display.update()
+
+
+
+
+
+
+
+
