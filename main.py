@@ -31,7 +31,7 @@ def get_name():
     print(p1name+" You choose "+pl1+'\nAnd\n'+p2name+" You choose "+pl2+" \nNOW LETS PLAY") #agaaghz
 
 
-def display():
+def display(board):
     # print_header()
     print()          #displays
     print('     |     |')
@@ -76,7 +76,7 @@ def win(symbol):
     return False
 
 
-def playerInput(symbol):
+def Input(symbol):
     while True:
         print(f'{players[symbol]}\'s turn: ')
         choice=int(input())
