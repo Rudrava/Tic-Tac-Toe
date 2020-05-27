@@ -18,8 +18,6 @@ eg
 
 then just run the mainGui.py file 
 
-      NOTE :- IF U WANNA PLAY THE CLI VERSION RUN JUST THE main.py file
-
 the game would start
 
 Rules :- 
