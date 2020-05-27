@@ -3,14 +3,22 @@ This is a simple version of tic tac toe with AI using minimax algorithm
 in the setUp.py file add the resolution of screen u wanna play in 
 and also the input method u want to use just turn it to True 
 eg
-if u wanna play with mouse 
-  MOUSE = True
   
-or if u wanna play with keyboard numpad 
-  KEYBOARD = True
-  Note :- the inputs for the top left box starts with numpad 1 and follows until numpad 9
+  
+    if u wanna play with mouse 
+      MOUSE = True
+  
+    or if u wanna play with keyboard numpad 
+      KEYBOARD = True
+
+
+
+    Note :- the inputs for the top left box starts with numpad 1 and follows until numpad 9
           any other key input is considered to be invlid
+
 then just run the mainGui.py file 
+
+      NOTE :- IF U WANNA PLAY THE CLI VERSION RUN JUST THE main.py file
 
 the game would start
 
